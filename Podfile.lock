@@ -1,0 +1,39 @@
+PODS:
+  - Alamofire (3.1.4)
+  - Appz (1.5.0)
+  - Aspects (1.4.1)
+  - SnapKit (0.18.0)
+  - SwiftyJSON (2.3.2)
+  - UICollectionViewInteractiveMovement (0.1.0):
+    - Aspects
+
+DEPENDENCIES:
+  - Alamofire
+  - Appz (from `https://github.com/SwiftKitz/Appz.git`)
+  - SnapKit
+  - SwiftyJSON
+  - UICollectionViewInteractiveMovement (from `https://github.com/nuudles/UICollectionViewInteractiveMovement`)
+
+EXTERNAL SOURCES:
+  Appz:
+    :git: https://github.com/SwiftKitz/Appz.git
+  UICollectionViewInteractiveMovement:
+    :git: https://github.com/nuudles/UICollectionViewInteractiveMovement
+
+CHECKOUT OPTIONS:
+  Appz:
+    :commit: 4e3dafd4452e1620ef47b0f639042856f0730ba9
+    :git: https://github.com/SwiftKitz/Appz.git
+  UICollectionViewInteractiveMovement:
+    :commit: 83e42ac42208790cfd31f3aa243eaa4e296cc119
+    :git: https://github.com/nuudles/UICollectionViewInteractiveMovement
+
+SPEC CHECKSUMS:
+  Alamofire: fbc829692f351fa1d8a31dd75fd7f7f56fea31fb
+  Appz: d517c7cfb0ee193698edab4410fd1a073c1464a0
+  Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
+  SnapKit: e1f090a6d47b1dd4bd89b73f72b6746a7835ef3c
+  SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
+  UICollectionViewInteractiveMovement: 046fa5a6ee1faa84135ca55d5bd6e47a3ce46261
+
+COCOAPODS: 0.39.0

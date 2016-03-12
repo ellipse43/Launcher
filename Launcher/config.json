@@ -1,0 +1,36 @@
+{
+    "app": "Launcher",
+    "version": "v0.0.1",
+    "tags": {
+        "app": {
+            "id": 1,
+            "name_zh": "应用程序",
+            "name_en": "Application",
+            "img": ""
+        },
+        "system": {
+            "id": 2,
+            "name_zh": "系统设置",
+            "name_en": "System",
+            "img": ""
+        }
+    },
+    "items": {
+        "wechat": {
+            "name_zh": "微信",
+            "name_en": "Wechat",
+            "tag_id": 1
+        },
+        "appStore": {
+            "name_zh": "AppStore",
+            "name_en": "AppStore",
+            "tag_id": 1
+        },
+        "setting": {
+            "name_zh": "设置",
+            "name_en": "Setting",
+            "tag_id": 2
+        }
+
+    }
+}
