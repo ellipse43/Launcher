@@ -50,7 +50,7 @@ class IndexViewController: UICollectionViewController {
         v.setTitle("添加", forState: UIControlState.Normal)
         v.setTitleColor(UIColor.blackColor(), forState: .Normal)
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 12)
-        v.addTarget(self, action: "addAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        v.addTarget(self, action: #selector(IndexViewController.addAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         v.layer.borderColor = UIColor(rgb: 0x3aaf85).CGColor
         v.layer.borderWidth = 1.0
         v.layer.cornerRadius = 20
@@ -60,8 +60,8 @@ class IndexViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadList:", name:"load", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enterBackground", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IndexViewController.loadList(_:)), name:"load", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IndexViewController.enterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
     }
 
     func enterBackground() {
@@ -139,7 +139,7 @@ class IndexViewController: UICollectionViewController {
     }
 
     func installStandardGestureForShake() {
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "longPressed:")
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(IndexViewController.longPressed(_:)))
         collectionView!.addGestureRecognizer(longPressGestureRecognizer)
     }
 
@@ -155,10 +155,10 @@ class IndexViewController: UICollectionViewController {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! IndexCollectionViewCell
         let index = indexPath.row
         cell.iconButton.setTitle(apps[index]["title"].string, forState: .Normal)
-        cell.iconButton.addTarget(self, action: "actions:", forControlEvents: UIControlEvents.TouchUpInside)
+        cell.iconButton.addTarget(self, action: #selector(IndexViewController.actions(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         cell.titleLabel.text = apps[index]["title"].string
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector("delTapped:"))
+        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(IndexViewController.delTapped(_:)))
         cell.del.userInteractionEnabled = true
         cell.del.addGestureRecognizer(tapGestureRecognizer)
         cell.del.hidden = true
@@ -210,12 +210,12 @@ class IndexViewController: UICollectionViewController {
         for cell in collectionView?.visibleCells() as! [IndexCollectionViewCell] {
             cell.layer.addAnimation(animation, forKey: "shakeMan")
             cell.del.hidden = false
-            cell.iconButton.removeTarget(self, action: "actions:", forControlEvents: .TouchUpInside)
+            cell.iconButton.removeTarget(self, action: #selector(IndexViewController.actions(_:)), forControlEvents: .TouchUpInside)
         }
         installsStandardGestureForInteractiveMovement = true
 
         if navigationItem.rightBarButtonItem == nil {
-            let barItem = UIBarButtonItem(title: "完成", style: UIBarButtonItemStyle.Plain, target: self, action: "doneAction:")
+            let barItem = UIBarButtonItem(title: "完成", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(IndexViewController.doneAction(_:)))
             navigationItem.rightBarButtonItem = barItem
         }
 
@@ -226,7 +226,7 @@ class IndexViewController: UICollectionViewController {
             for cell in collectionView?.visibleCells() as! [IndexCollectionViewCell] {
                 cell.layer.removeAnimationForKey("shakeMan")
                 cell.del.hidden = true
-                cell.iconButton.addTarget(self, action: "actions:", forControlEvents: .TouchUpInside)
+                cell.iconButton.addTarget(self, action: #selector(IndexViewController.actions(_:)), forControlEvents: .TouchUpInside)
             }
             installsStandardGestureForInteractiveMovement = false
             navigationItem.rightBarButtonItem = nil

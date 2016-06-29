@@ -48,7 +48,7 @@ class AddViewController: UIViewController {
         v.setTitleColor(UIColor(rgb: 0x3aaf85), forState: .Highlighted)
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 12)
         v.setTitle("保存", forState: .Normal)
-        v.addTarget(self, action: "saveAction:", forControlEvents: .TouchUpInside)
+        v.addTarget(self, action: #selector(AddViewController.saveAction(_:)), forControlEvents: .TouchUpInside)
 
         v.setTitleColor(UIColor.blackColor(), forState: .Normal)
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 12)

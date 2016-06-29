@@ -79,7 +79,7 @@ class TodayViewController: UICollectionViewController, NCWidgetProviding {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! CollectionViewCell
         let index = indexPath.row
         cell.iconButton.setTitle(apps[index]["title"].string, forState: .Normal)
-        cell.iconButton.addTarget(self, action: "actions:", forControlEvents: UIControlEvents.TouchUpInside)
+        cell.iconButton.addTarget(self, action: #selector(TodayViewController.actions(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         cell.titleLabel.text = apps[index]["title"].string
 
         return cell
