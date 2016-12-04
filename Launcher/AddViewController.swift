@@ -23,18 +23,18 @@ class AddViewController: UIViewController {
 
     lazy var attributeTextField: UITextField = {
         let v = UITextField()
-        v.borderStyle = UITextBorderStyle.Line
-        v.textAlignment = NSTextAlignment.Center
-        v.layer.borderColor = UIColor(rgb: 0x3aaf85).CGColor
+        v.borderStyle = UITextBorderStyle.line
+        v.textAlignment = NSTextAlignment.center
+        v.layer.borderColor = UIColor(rgb: 0x3aaf85).cgColor
         v.layer.borderWidth = 1.0
         return v
     }()
 
     lazy var titleTextField: UITextField = {
         let v = UITextField()
-        v.borderStyle = UITextBorderStyle.Line
-        v.textAlignment = NSTextAlignment.Center
-        v.layer.borderColor = UIColor(rgb: 0x3aaf85).CGColor
+        v.borderStyle = UITextBorderStyle.line
+        v.textAlignment = NSTextAlignment.center
+        v.layer.borderColor = UIColor(rgb: 0x3aaf85).cgColor
         v.layer.borderWidth = 1.0
         if let name = self.item["verbose_name"].string {
             v.text = name
@@ -44,15 +44,15 @@ class AddViewController: UIViewController {
 
     lazy var saveButton: UIButton = {
         let v = UIButton()
-        v.setTitleColor(UIColor.blackColor(), forState: .Normal)
-        v.setTitleColor(UIColor(rgb: 0x3aaf85), forState: .Highlighted)
+        v.setTitleColor(UIColor.black, for: UIControlState())
+        v.setTitleColor(UIColor(rgb: 0x3aaf85), for: .highlighted)
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 12)
-        v.setTitle("保存", forState: .Normal)
-        v.addTarget(self, action: #selector(AddViewController.saveAction(_:)), forControlEvents: .TouchUpInside)
+        v.setTitle("保存", for: UIControlState())
+        v.addTarget(self, action: #selector(AddViewController.saveAction(_:)), for: .touchUpInside)
 
-        v.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        v.setTitleColor(UIColor.black, for: UIControlState())
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 12)
-        v.layer.borderColor = UIColor(rgb: 0x3aaf85).CGColor
+        v.layer.borderColor = UIColor(rgb: 0x3aaf85).cgColor
         v.layer.borderWidth = 1.0
         v.layer.cornerRadius = 20
         return v
@@ -64,17 +64,17 @@ class AddViewController: UIViewController {
     }
 
     func setup() {
-        for v in [iconImageView, attributeTextField, titleTextField, saveButton] {
-            view.addSubview(v)
+        for v in [iconImageView, attributeTextField, titleTextField, saveButton] as [Any] {
+            view.addSubview(v as! UIView)
         }
 
         if let placeholder = item["placeholder"].string {
             attributeTextField.placeholder = placeholder
         } else {
-            attributeTextField.hidden = true
+            attributeTextField.isHidden = true
         }
 
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
 
         let gap = 20
 
@@ -100,7 +100,7 @@ class AddViewController: UIViewController {
         }
 
         saveButton.snp_makeConstraints { (make) -> Void in
-            if attributeTextField.hidden == true {
+            if attributeTextField.isHidden == true {
                 make.top.equalTo(titleTextField.snp_bottom).offset(gap)
             } else {
                 make.top.equalTo(attributeTextField.snp_bottom).offset(gap)
@@ -111,19 +111,19 @@ class AddViewController: UIViewController {
         }
     }
 
-    func saveAction(sender: UIButton) {
+    func saveAction(_ sender: UIButton) {
 
-        if let dir : NSString = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true).first {
-            let path = dir.stringByAppendingPathComponent("data.json")
+        if let dir : NSString = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true).first as NSString? {
+            let path = dir.appendingPathComponent("data.json")
 
-            if NSFileManager.defaultManager().fileExistsAtPath(path) == false {
+            if FileManager.default.fileExists(atPath: path) == false {
                 do {
-                    try JSON([]).rawString()!.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
+                    try JSON([]).rawString()!.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
                 }
                 catch {/* error handling here */}
             }
 
-            if let data = NSData(contentsOfFile: path) {
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
                 var origin = JSON(data: data).arrayValue
                 let newItem = [
                     "icon": "default",
@@ -136,16 +136,16 @@ class AddViewController: UIViewController {
                 print(origin)
 
                 do {
-                    try JSON(origin).rawString()!.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
-                    NSNotificationCenter.defaultCenter().postNotificationName("load", object: nil)
+                    try JSON(origin).rawString()!.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: "load"), object: nil)
                 } catch {
                     print("write error")
                 }
             }
         }
         // fix
-        let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Index") as! UINavigationController
-        self.presentViewController(viewController, animated: false, completion: nil)
+        let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Index") as! UINavigationController
+        self.present(viewController, animated: false, completion: nil)
     }
 
 }

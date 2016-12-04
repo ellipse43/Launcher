@@ -11,20 +11,19 @@ import AppLauncherKit
 import SnapKit
 import Appz
 import SwiftyJSON
-import UICollectionViewInteractiveMovement
 
 
 class IndexViewController: UICollectionViewController {
 
-    let app = UIApplication.sharedApplication()
-    let defaults = NSUserDefaults(suiteName: "group.com.lgtm.Launcher")
+    let app = UIApplication.shared
+    let defaults = UserDefaults(suiteName: "group.com.lgtm.Launcher")
 
     var apps = [JSON]() {
         didSet {
-            defaults?.setObject(JSON(apps).object, forKey: "apps")
+            defaults?.set(JSON(apps).object, forKey: "apps")
             defaults?.synchronize()
 
-            NSNotificationCenter.defaultCenter().postNotificationName("adc", object: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "adc"), object: nil)
         }
     }
 
@@ -34,8 +33,8 @@ class IndexViewController: UICollectionViewController {
         v.dataSource = self
         v.bounces = true
         v.alwaysBounceVertical = true
-        v.registerClass(IndexCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
-        v.backgroundColor = UIColor.whiteColor()
+        v.register(IndexCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        v.backgroundColor = UIColor.white
         return v
     }()
 
@@ -47,11 +46,11 @@ class IndexViewController: UICollectionViewController {
 
     lazy var addButton: UIButton = {
         let v = UIButton()
-        v.setTitle("添加", forState: UIControlState.Normal)
-        v.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        v.setTitle("添加", for: UIControlState())
+        v.setTitleColor(UIColor.black, for: UIControlState())
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 12)
-        v.addTarget(self, action: #selector(IndexViewController.addAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        v.layer.borderColor = UIColor(rgb: 0x3aaf85).CGColor
+        v.addTarget(self, action: #selector(IndexViewController.addAction(_:)), for: UIControlEvents.touchUpInside)
+        v.layer.borderColor = UIColor(rgb: 0x3aaf85).cgColor
         v.layer.borderWidth = 1.0
         v.layer.cornerRadius = 20
         return v
@@ -60,8 +59,8 @@ class IndexViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IndexViewController.loadList(_:)), name:"load", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IndexViewController.enterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(IndexViewController.loadList(_:)), name:NSNotification.Name(rawValue: "load"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(IndexViewController.enterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
     }
 
     func enterBackground() {
@@ -69,11 +68,11 @@ class IndexViewController: UICollectionViewController {
     }
 
     func _save() {
-        if let dir : NSString = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true).first {
-            let path = dir.stringByAppendingPathComponent("data.json")
+        if let dir : NSString = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true).first as NSString? {
+            let path = dir.appendingPathComponent("data.json")
 
             do {
-                try JSON(self.apps).rawString()!.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
+                try JSON(self.apps).rawString()!.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
             } catch {
                 print("write error")
             }
@@ -81,23 +80,23 @@ class IndexViewController: UICollectionViewController {
     }
 
     func loadApps() {
-        if let dir : NSString = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true).first {
-            let path = dir.stringByAppendingPathComponent("data.json")
+        if let dir : NSString = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true).first as NSString? {
+            let path = dir.appendingPathComponent("data.json")
 
-            if let data = NSData(contentsOfFile: path) {
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
                 self.apps = JSON(data: data).arrayValue
             }
         }
     }
 
-    func delApps(index: Int) {
-        apps.removeAtIndex(index)
+    func delApps(_ index: Int) {
+        apps.remove(at: index)
         _save()
         collectionView?.reloadData()
         collectionView?.layoutIfNeeded()
     }
 
-    func loadList(notification: NSNotification){
+    func loadList(_ notification: Notification){
         loadApps()
         collectionView?.reloadData()
     }
@@ -105,7 +104,7 @@ class IndexViewController: UICollectionViewController {
     func setup() {
         if let navBar = self.navigationController?.navigationBar {
             navBar.topItem!.title = "启动器"
-            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
             navBar.barTintColor = UIColor(rgb: 0x3aaf85)
         }
 
@@ -114,8 +113,8 @@ class IndexViewController: UICollectionViewController {
         collectionView!.dataSource = self
         collectionView!.bounces = true
         collectionView!.alwaysBounceVertical = true
-        collectionView!.registerClass(IndexCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
-        collectionView!.backgroundColor = UIColor.whiteColor()
+        collectionView!.register(IndexCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView!.backgroundColor = UIColor.white
 
         collectionView!.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(view).offset(10)
@@ -143,54 +142,54 @@ class IndexViewController: UICollectionViewController {
         collectionView!.addGestureRecognizer(longPressGestureRecognizer)
     }
 
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return apps.count
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! IndexCollectionViewCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! IndexCollectionViewCell
         let index = indexPath.row
-        cell.iconButton.setTitle(apps[index]["title"].string, forState: .Normal)
-        cell.iconButton.addTarget(self, action: #selector(IndexViewController.actions(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.iconButton.setTitle(apps[index]["title"].string, for: UIControlState())
+        cell.iconButton.addTarget(self, action: #selector(IndexViewController.actions(_:)), for: UIControlEvents.touchUpInside)
         cell.titleLabel.text = apps[index]["title"].string
 
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(IndexViewController.delTapped(_:)))
-        cell.del.userInteractionEnabled = true
+        cell.del.isUserInteractionEnabled = true
         cell.del.addGestureRecognizer(tapGestureRecognizer)
-        cell.del.hidden = true
+        cell.del.isHidden = true
 
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
-        return CGSizeMake(50, 50)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize{
+        return CGSize(width: 50, height: 50)
     }
 
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
     }
 
-    override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath)
+    override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
     {
-        let item = apps.removeAtIndex(sourceIndexPath.row)
-        apps.insert(item, atIndex: destinationIndexPath.row)
+        let item = apps.remove(at: sourceIndexPath.row)
+        apps.insert(item, at: destinationIndexPath.row)
     }
 
-    override func collectionView(collectionView: UICollectionView, canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool
+    override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool
     {
         return true
     }
 
-    func actions(sender: AnyObject) {
+    func actions(_ sender: AnyObject) {
 
         if let button = sender as? UIButton {
             if let superview = button.superview {
                 if let cell = superview.superview as? IndexCollectionViewCell {
-                    if let indexPath = collectionView!.indexPathForCell(cell) {
+                    if let indexPath = collectionView!.indexPath(for: cell) {
                         let type = apps[indexPath.row]["type"].string!
                         let action = apps[indexPath.row]["action"].string!
                         launchApp(type, action: action, extra: apps[indexPath.row]["extra"].string!, app: app)
@@ -205,17 +204,17 @@ class IndexViewController: UICollectionViewController {
         animation.duration = 0.12
         animation.autoreverses = true
         animation.repeatCount = HUGE
-        animation.fromValue = NSValue(CATransform3D: CATransform3DMakeRotation(0.05, 0, 0, 1.0))
-        animation.toValue = NSValue(CATransform3D: CATransform3DMakeRotation(-0.05, 0, 0, 1.0))
-        for cell in collectionView?.visibleCells() as! [IndexCollectionViewCell] {
-            cell.layer.addAnimation(animation, forKey: "shakeMan")
-            cell.del.hidden = false
-            cell.iconButton.removeTarget(self, action: #selector(IndexViewController.actions(_:)), forControlEvents: .TouchUpInside)
+        animation.fromValue = NSValue(caTransform3D: CATransform3DMakeRotation(0.05, 0, 0, 1.0))
+        animation.toValue = NSValue(caTransform3D: CATransform3DMakeRotation(-0.05, 0, 0, 1.0))
+        for cell in collectionView?.visibleCells as! [IndexCollectionViewCell] {
+            cell.layer.add(animation, forKey: "shakeMan")
+            cell.del.isHidden = false
+            cell.iconButton.removeTarget(self, action: #selector(IndexViewController.actions(_:)), for: .touchUpInside)
         }
         installsStandardGestureForInteractiveMovement = true
 
         if navigationItem.rightBarButtonItem == nil {
-            let barItem = UIBarButtonItem(title: "完成", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(IndexViewController.doneAction(_:)))
+            let barItem = UIBarButtonItem(title: "完成", style: UIBarButtonItemStyle.plain, target: self, action: #selector(IndexViewController.doneAction(_:)))
             navigationItem.rightBarButtonItem = barItem
         }
 
@@ -223,28 +222,28 @@ class IndexViewController: UICollectionViewController {
 
     func endAnimation() {
         if navigationItem.rightBarButtonItem != nil {
-            for cell in collectionView?.visibleCells() as! [IndexCollectionViewCell] {
-                cell.layer.removeAnimationForKey("shakeMan")
-                cell.del.hidden = true
-                cell.iconButton.addTarget(self, action: #selector(IndexViewController.actions(_:)), forControlEvents: .TouchUpInside)
+            for cell in collectionView?.visibleCells as! [IndexCollectionViewCell] {
+                cell.layer.removeAnimation(forKey: "shakeMan")
+                cell.del.isHidden = true
+                cell.iconButton.addTarget(self, action: #selector(IndexViewController.actions(_:)), for: .touchUpInside)
             }
             installsStandardGestureForInteractiveMovement = false
             navigationItem.rightBarButtonItem = nil
         }
     }
 
-    func longPressed(gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .Began {
+    func longPressed(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
             startAnimation()
         }
     }
 
-    func delTapped(gesture: UITapGestureRecognizer) {
+    func delTapped(_ gesture: UITapGestureRecognizer) {
 
         if let v = gesture.view!.superview?.subviews[0] {
             if let superview = v.superview {
                 if let cell = superview.superview as? IndexCollectionViewCell {
-                    if let indexPath = collectionView!.indexPathForCell(cell) {
+                    if let indexPath = collectionView!.indexPath(for: cell) {
                         let row = indexPath.row
                         delApps(row)
                         if apps.count > 0 {
@@ -256,18 +255,18 @@ class IndexViewController: UICollectionViewController {
         }
     }
 
-    func doneAction(sender: UIButton) {
+    func doneAction(_ sender: UIButton) {
         endAnimation()
         _save()
 
     }
 
-    func addAction(sender: UIButton) {
+    func addAction(_ sender: UIButton) {
 
         endAnimation()
 
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        let setting = UIAlertAction(title: "系统设置", style: .Default) { action -> Void in
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        let setting = UIAlertAction(title: "系统设置", style: .default) { action -> Void in
             let items = JSON(
                 [
                     [
@@ -311,7 +310,7 @@ class IndexViewController: UICollectionViewController {
 
             self.navigationController!.pushViewController(vc, animated: true)
         }
-        let application = UIAlertAction(title: "应用程序", style: .Default) { action -> Void in
+        let application = UIAlertAction(title: "应用程序", style: .default) { action -> Void in
 
             let weixin = [
                 "name": "微信",
@@ -347,7 +346,7 @@ class IndexViewController: UICollectionViewController {
                         "verbose_name": "扫一扫"
                     ]
                 ]
-            ]
+            ] as [String : Any]
 
             let items = JSON(
                 [
@@ -459,7 +458,7 @@ class IndexViewController: UICollectionViewController {
 
             self.navigationController!.pushViewController(vc, animated: true)
         }
-        let contact = UIAlertAction(title: "联系人", style: .Default) { action -> Void in
+        let contact = UIAlertAction(title: "联系人", style: .default) { action -> Void in
 
             let items = JSON(
                 [
@@ -495,7 +494,7 @@ class IndexViewController: UICollectionViewController {
 
             self.navigationController!.pushViewController(vc, animated: true)
         }
-        let cancel = UIAlertAction(title: "取消", style: .Cancel) { action -> Void in
+        let cancel = UIAlertAction(title: "取消", style: .cancel) { action -> Void in
 
         }
 
@@ -503,7 +502,7 @@ class IndexViewController: UICollectionViewController {
             sheet.addAction(v)
         }
 
-        presentViewController(sheet, animated: true, completion: nil)
+        present(sheet, animated: true, completion: nil)
     }
 
 }

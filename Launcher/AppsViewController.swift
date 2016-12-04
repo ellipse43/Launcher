@@ -17,7 +17,7 @@ class AppsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let v = UITableView()
         v.delegate = self
         v.dataSource = self
-        v.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        v.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         return v
     }()
 
@@ -36,26 +36,26 @@ class AppsViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return items.count
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items[section]["items"].count
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = AddViewController()
         vc.item = items[indexPath.section]["items"][indexPath.row]
         navigationController!.pushViewController(vc, animated: true)
     }
 
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return items[section]["name"].string
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "cell")
 
         if let v = items[indexPath.section]["items"][indexPath.row]["name"].string {
             cell.textLabel!.text = v

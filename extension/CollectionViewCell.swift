@@ -12,17 +12,17 @@ class CollectionViewCell: UICollectionViewCell {
 
     lazy var iconButton: UIButton = {
         let v = UIButton()
-        v.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        v.setTitleColor(UIColor.white, for: UIControlState())
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 6)
         v.layer.borderWidth = 1.0
         v.layer.cornerRadius = 20
-        v.layer.borderColor = UIColor.whiteColor().CGColor
+        v.layer.borderColor = UIColor.white.cgColor
         return v
     }()
 
     lazy var titleLabel: UILabel = {
         let v = UILabel()
-        v.textColor = UIColor.whiteColor()
+        v.textColor = UIColor.white
         v.font = UIFont(name: "AppleSDGothicNeo-Light", size: 10)
         return v
     }()

@@ -12,10 +12,10 @@ class IndexCollectionViewCell: UICollectionViewCell {
 
     lazy var iconButton: UIButton = {
         let v = UIButton()
-        v.setTitleColor(UIColor.blackColor(), forState: .Normal)
-        v.setTitleColor(UIColor(rgb: 0x3aaf85), forState: .Highlighted)
+        v.setTitleColor(UIColor.black, for: UIControlState())
+        v.setTitleColor(UIColor(rgb: 0x3aaf85), for: .highlighted)
         v.titleLabel!.font = UIFont(name: "AppleSDGothicNeo-Light", size: 6)
-        v.layer.borderColor = UIColor(rgb: 0x3aaf85).CGColor
+        v.layer.borderColor = UIColor(rgb: 0x3aaf85).cgColor
         v.layer.borderWidth = 1.0
         v.layer.cornerRadius = 20
         return v
@@ -30,7 +30,7 @@ class IndexCollectionViewCell: UICollectionViewCell {
     lazy var del: UIImageView = {
         let v = UIImageView()
         v.image = UIImage(named: "launch-close")
-        v.hidden = true
+        v.isHidden = true
         return v
     }()
 
@@ -63,7 +63,7 @@ class IndexCollectionViewCell: UICollectionViewCell {
             make.centerX.equalTo(iconButton.snp_centerX)
         }
 
-        del.snp_makeConstraints(closure: { (make) -> Void in
+        del.snp_makeConstraints({ (make) -> Void in
             make.top.equalTo(iconButton).offset(-5)
             make.left.equalTo(iconButton).offset(-5)
             make.width.equalTo(20)

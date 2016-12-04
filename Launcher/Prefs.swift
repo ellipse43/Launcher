@@ -25,8 +25,8 @@ extension Applications {
 extension Applications.Prefs {
 
     enum Action {
-        case Safari
-        case Keyboard
+        case safari
+        case keyboard
     }
 }
 
@@ -36,7 +36,7 @@ extension Applications.Prefs.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Safari:
+        case .safari:
             return ActionPaths(
                 app: Path(
                     pathComponents: [],
@@ -47,7 +47,7 @@ extension Applications.Prefs.Action: ExternalApplicationAction {
                 web: Path()
             )
 
-        case .Keyboard:
+        case .keyboard:
             return ActionPaths(
                 app: Path(
                     pathComponents: [],
@@ -82,11 +82,11 @@ extension Applications {
 extension Applications.Weixin {
 
     enum Action {
-        case Open
-        case OfficialAccounts
-        case Scan
-        case Moments
-        case Profile
+        case open
+        case officialAccounts
+        case scan
+        case moments
+        case profile
     }
 }
 
@@ -96,7 +96,7 @@ extension Applications.Weixin.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],
@@ -105,7 +105,7 @@ extension Applications.Weixin.Action: ExternalApplicationAction {
                 web: Path()
             )
 
-        case .OfficialAccounts:
+        case .officialAccounts:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["dl", "officialaccounts"],
@@ -114,7 +114,7 @@ extension Applications.Weixin.Action: ExternalApplicationAction {
                 web: Path()
             )
 
-        case .Scan:
+        case .scan:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["dl", "scan"],
@@ -123,7 +123,7 @@ extension Applications.Weixin.Action: ExternalApplicationAction {
                 web: Path()
             )
 
-        case .Moments:
+        case .moments:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["dl", "moments"],
@@ -132,7 +132,7 @@ extension Applications.Weixin.Action: ExternalApplicationAction {
                 web: Path()
             )
 
-        case .Profile:
+        case .profile:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["dl", "profile"],
@@ -164,7 +164,7 @@ extension Applications {
 extension Applications.Orpheus {
 
     enum Action {
-        case Open
+        case open
     }
 }
 
@@ -174,7 +174,7 @@ extension Applications.Orpheus.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],
@@ -205,7 +205,7 @@ extension Applications {
 extension Applications.BaiduMap {
 
     enum Action {
-        case Open
+        case open
     }
 }
 
@@ -215,7 +215,7 @@ extension Applications.BaiduMap.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],
@@ -246,7 +246,7 @@ extension Applications {
 extension Applications.Alipay {
 
     enum Action {
-        case Open
+        case open
     }
 }
 
@@ -256,7 +256,7 @@ extension Applications.Alipay.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],
@@ -287,7 +287,7 @@ extension Applications {
 extension Applications.Zhihu {
 
     enum Action {
-        case Open
+        case open
     }
 }
 
@@ -297,7 +297,7 @@ extension Applications.Zhihu.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],
@@ -328,7 +328,7 @@ extension Applications {
 extension Applications.Bilibili {
 
     enum Action {
-        case Open
+        case open
     }
 }
 
@@ -338,7 +338,7 @@ extension Applications.Bilibili.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],
@@ -369,7 +369,7 @@ extension Applications {
 extension Applications.DidiTaxi {
 
     enum Action {
-        case Open
+        case open
     }
 }
 
@@ -379,7 +379,7 @@ extension Applications.DidiTaxi.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],
@@ -410,7 +410,7 @@ extension Applications {
 extension Applications.DuokanReader {
 
     enum Action {
-        case Open
+        case open
     }
 }
 
@@ -420,7 +420,7 @@ extension Applications.DuokanReader.Action: ExternalApplicationAction {
 
         switch self {
 
-        case .Open:
+        case .open:
             return ActionPaths(
                 app: Path(
                     pathComponents: ["app"],

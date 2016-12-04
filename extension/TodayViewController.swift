@@ -16,7 +16,7 @@ import AppLauncherKit
 
 class TodayViewController: UICollectionViewController, NCWidgetProviding {
 
-    let defaults = NSUserDefaults(suiteName: "group.com.lgtm.Launcher")
+    let defaults = UserDefaults(suiteName: "group.com.lgtm.Launcher")
     var app: NSExtensionContext!
 
     lazy var flowLayout:UICollectionViewFlowLayout = {
@@ -29,7 +29,7 @@ class TodayViewController: UICollectionViewController, NCWidgetProviding {
 
     func update() {
         defaults?.synchronize()
-        if let restoredValue = defaults!.objectForKey("apps") {
+        if let restoredValue = defaults!.object(forKey: "apps") {
             apps = JSON(restoredValue).array!
             print("ok", apps, restoredValue)
         }
@@ -37,7 +37,7 @@ class TodayViewController: UICollectionViewController, NCWidgetProviding {
             print("Cannot find value")
         }
 
-        let height = (self.collectionView?.collectionViewLayout.collectionViewContentSize().height)!
+        let height = (self.collectionView?.collectionViewLayout.collectionViewContentSize.height)!
 
         collectionView!.snp_updateConstraints { (make) -> Void in
             make.height.equalTo(height + 10)
@@ -52,7 +52,7 @@ class TodayViewController: UICollectionViewController, NCWidgetProviding {
         collectionView!.dataSource = self
         collectionView!.bounces = true
         collectionView!.alwaysBounceVertical = true
-        collectionView!.registerClass(CollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView!.register(CollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView?.backgroundColor = nil
 
         collectionView!.snp_makeConstraints { (make) -> Void in
@@ -64,40 +64,40 @@ class TodayViewController: UICollectionViewController, NCWidgetProviding {
 
         update()
 
-        NSNotificationCenter.defaultCenter().addObserverForName("adc", object: nil, queue: NSOperationQueue.mainQueue()) { (_) -> Void in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "adc"), object: nil, queue: OperationQueue.main) { (_) -> Void in
             self.update()
             self.collectionView!.reloadData()
         }
         app = self.extensionContext
     }
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return apps.count
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! CollectionViewCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
         let index = indexPath.row
-        cell.iconButton.setTitle(apps[index]["title"].string, forState: .Normal)
-        cell.iconButton.addTarget(self, action: #selector(TodayViewController.actions(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.iconButton.setTitle(apps[index]["title"].string, for: UIControlState())
+        cell.iconButton.addTarget(self, action: #selector(TodayViewController.actions(_:)), for: UIControlEvents.touchUpInside)
         cell.titleLabel.text = apps[index]["title"].string
 
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
-        return CGSizeMake(50, 50)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize{
+        return CGSize(width: 50, height: 50)
     }
 
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
     }
 
-    override func collectionView(collectionView: UICollectionView, canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void))
+    func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void))
     {
         // Perform any setup necessary in order to update the view.
 
@@ -105,24 +105,24 @@ class TodayViewController: UICollectionViewController, NCWidgetProviding {
         // If there's no update required, use NCUpdateResult.NoData
         // If there's an update, use NCUpdateResult.NewData
 
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             self.update()
             self.collectionView!.reloadData()
         })
 
-        completionHandler(NCUpdateResult.NewData)
+        completionHandler(NCUpdateResult.newData)
     }
 
-    func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
-        return UIEdgeInsetsZero
+    func widgetMarginInsets(forProposedMarginInsets defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
+        return UIEdgeInsets.zero
     }
 
-    func actions(sender: AnyObject) {
+    func actions(_ sender: AnyObject) {
 
         if let button = sender as? UIButton {
             if let superview = button.superview {
                 if let cell = superview.superview as? CollectionViewCell {
-                    if let indexPath = collectionView!.indexPathForCell(cell) {
+                    if let indexPath = collectionView!.indexPath(for: cell) {
                         let type = apps[indexPath.row]["type"].string!
                         let action = apps[indexPath.row]["action"].string!
                         launchApp(type, action: action, extra: apps[indexPath.row]["extra"].string!, app: app)

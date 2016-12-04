@@ -2,8 +2,19 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'SnapKit'
-pod 'Alamofire'
-pod 'Appz', :git => 'https://github.com/SwiftKitz/Appz.git'
-pod 'SwiftyJSON'
-pod 'UICollectionViewInteractiveMovement', :git => 'https://github.com/nuudles/UICollectionViewInteractiveMovement'
+target 'Launcher' do
+    pod 'SnapKit', '~> 3.0.2'
+    pod 'Alamofire', '~> 4.0'
+    pod 'Appz', :git => 'https://github.com/SwiftKitz/Appz.git'
+    pod 'SwiftyJSON', '~> 3.1.1'
+end
+
+target 'AppLauncherKit' do
+    pod 'Appz', :git => 'https://github.com/SwiftKitz/Appz.git'
+end
+
+target 'extension' do
+    pod 'SnapKit', '~> 3.0.2'
+    pod 'Appz', :git => 'https://github.com/SwiftKitz/Appz.git'
+    pod 'SwiftyJSON', '~> 3.1.1'
+end
